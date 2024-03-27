@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       title: 'HAPEe',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Color.fromARGB(255, 17, 172, 178),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 17, 172, 178),
       ),
       home: MyHomePage(),
       debugShowCheckedModeBanner: false, // remember to change
@@ -28,7 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
   final List<Widget> _widgetOptions = <Widget>[
-    const Text('Home Page'),
+    HomePage(),
     const Text('Explore Page'),
     NotificationPage(), // Added NotificationPage
     ProfilePage(),
@@ -88,8 +88,8 @@ class ProfilePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
             child: CircleAvatar(
               radius: 50,
               backgroundColor: Colors.blue,
@@ -100,8 +100,8 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
               'Username',
               style: TextStyle(
@@ -111,8 +111,8 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
               'user@example.com',
               style: TextStyle(
@@ -137,7 +137,7 @@ class ProfilePage extends StatelessWidget {
               // Navigate to settings page
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
@@ -155,7 +155,7 @@ class NotificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: [
+      children: const [
         ListTile(
           leading: CircleAvatar(
             backgroundColor: Colors.blue,
@@ -181,6 +181,67 @@ class NotificationPage extends StatelessWidget {
         ),
         Divider(),
       ],
+    );
+  }
+}
+
+class HomePage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      child: Stack(
+        children: [
+          Image.asset(
+            'assets/yodaselfie.jpg',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          const Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  'Yo Duh',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.red,
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.green,
+                      child: Icon(
+                        Icons.check,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

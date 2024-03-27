@@ -29,7 +29,7 @@ class _AnimatedOpeningScreenState extends State<AnimatedOpeningScreen>
   void initState() {
     super.initState();
     _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
+        AnimationController(vsync: this, duration: const Duration(seconds: 3));
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
     _animationController.forward();
 
