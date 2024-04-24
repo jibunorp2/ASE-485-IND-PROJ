@@ -2,9 +2,12 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:happe/widgets/widgets.dart';
 
 import 'package:happe/models/models.dart';
+
+import '../../blocs/swipe/swipe_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = '/';
@@ -19,101 +22,92 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
-      body: Column(
-        children: [
-          UserCard(user: User.users[0]),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 8.0,
-              horizontal: 60,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: BlocBuilder<SwipeBloc, SwipeState>(
+        builder: (context, state) {
+          if (state is SwipeLoading) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is SwipeLoaded) {
+            return Column(
               children: [
-                ChoiceButton(
-                  width: 60,
-                  height: 60,
-                  size: 25,
-                  hasGradient: false,
-                  color: Theme.of(context).colorScheme.primary,
-                  icon: Icons.clear_sharp,
+                InkWell(
+                  onDoubleTap: () {
+                    Navigator.pushNamed(context, '/users',
+                        arguments: state.users[0]);
+                  },
+                  child: Draggable(
+                    child: UserCard(user: state.users[0]),
+                    feedback: UserCard(user: state.users[0]),
+                    childWhenDragging: UserCard(user: state.users[1]),
+                    onDragEnd: (drag) {
+                      if (drag.velocity.pixelsPerSecond.dx < 0) {
+                        context.read<SwipeBloc>()
+                          ..add(SwipeLeftEvent(user: state.users[0]));
+                        print('Swiped Left');
+                      } else {
+                        context.read<SwipeBloc>()
+                          ..add(SwipeRightEvent(user: state.users[0]));
+                        print('Swiped Right');
+                      }
+                    },
+                  ),
                 ),
-                ChoiceButton(
-                  width: 60,
-                  height: 60,
-                  size: 30,
-                  hasGradient: true,
-                  color: Theme.of(context).colorScheme.secondary,
-                  icon: Icons.favorite_border_sharp,
-                ),
-                ChoiceButton(
-                  width: 60,
-                  height: 60,
-                  size: 25,
-                  hasGradient: false,
-                  color: Theme.of(context).colorScheme.primary,
-                  icon: Icons.watch_later,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 60,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          context.read<SwipeBloc>()
+                            ..add(SwipeLeftEvent(user: state.users[0]));
+                          print('Swiped Left');
+                        },
+                        child: ChoiceButton(
+                          width: 60,
+                          height: 60,
+                          size: 25,
+                          hasGradient: false,
+                          color: Theme.of(context).colorScheme.primary,
+                          icon: Icons.clear_sharp,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          context.read<SwipeBloc>()
+                            ..add(SwipeRightEvent(user: state.users[0]));
+                          print('Swiped Right');
+                        },
+                        child: ChoiceButton(
+                          width: 60,
+                          height: 60,
+                          size: 30,
+                          hasGradient: true,
+                          color: Theme.of(context).colorScheme.secondary,
+                          icon: Icons.favorite_border_sharp,
+                        ),
+                      ),
+                      ChoiceButton(
+                        width: 60,
+                        height: 60,
+                        size: 25,
+                        hasGradient: false,
+                        color: Theme.of(context).colorScheme.primary,
+                        icon: Icons.watch_later,
+                      ),
+                    ],
+                  ),
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ChoiceButton extends StatelessWidget {
-  final double width;
-  final double height;
-  final double size;
-  final Color color;
-  final bool hasGradient;
-  final IconData icon;
-
-  const ChoiceButton(
-      {super.key,
-      required this.width,
-      required this.height,
-      required this.size,
-      required this.color,
-      required this.hasGradient,
-      required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white,
-        gradient: hasGradient
-            ? LinearGradient(
-                colors: [
-                  Theme.of(context).canvasColor,
-                  Theme.of(context).primaryColor,
-                ],
-              )
-            : LinearGradient(
-                colors: [
-                  Colors.white,
-                  Colors.white,
-                ],
-              ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            spreadRadius: 4,
-            blurRadius: 4,
-            offset: Offset(3, 3),
-          )
-        ],
-      ),
-      child: Icon(
-        icon,
-        color: color,
-        size: size,
+            );
+          } else {
+            return Text('Something went wrong');
+          }
+        },
       ),
     );
   }
