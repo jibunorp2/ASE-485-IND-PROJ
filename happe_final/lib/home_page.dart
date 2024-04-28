@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:happe_final/matches_screen.dart';
 import 'package:happe_final/profile_page.dart';
 import 'user_card.dart';
-import 'user.dart';
+import 'user.dart' as app_user; // Use an alias for your custom user class
 
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State {
   int _selectedIndex = 0;
 
   @override
@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             UserCard(),
             MatchesScreen(),
-            ProfilePage(user: User.users.first),
+            ProfilePage(), // Use the alias here
           ],
         ),
       ),

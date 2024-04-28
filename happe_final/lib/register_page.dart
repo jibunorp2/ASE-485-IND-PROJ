@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'onboarding_page.dart'; // Ensure you have this import for navigation
 
 class RegisterPage extends StatefulWidget {
@@ -6,21 +7,46 @@ class RegisterPage extends StatefulWidget {
   _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State {
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
   String _confirmPassword = '';
 
-  void _register() {
-    // This ensures that form saves current state to variables before validating
+  final FirebaseAuth _auth =
+      FirebaseAuth.instance; // Firebase Authentication instance
+
+  void _register() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Perform registration operation or navigation if passwords match
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => OnboardingPage()),
-      );
+      if (_password == _confirmPassword) {
+        try {
+// Attempt to register the user using Firebase Authentication
+          UserCredential userCredential =
+              await _auth.createUserWithEmailAndPassword(
+            email: _email,
+            password: _password,
+          );
+// If successful, navigate to the OnboardingPage
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => OnboardingPage()),
+          );
+        } on FirebaseAuthException catch (e) {
+// Handle errors
+          if (e.code == 'weak-password') {
+            _showErrorDialog('The password provided is too weak.');
+          } else if (e.code == 'email-already-in-use') {
+            _showErrorDialog('The account already exists for that email.');
+          } else {
+            _showErrorDialog('Registration failed: ${e.message}');
+          }
+        } catch (e) {
+          _showErrorDialog('Error occurred: ${e.toString()}');
+        }
+      } else {
+        _showErrorDialog('Passwords do not match.');
+      }
     }
   }
 
@@ -98,12 +124,31 @@ class _RegisterPageState extends State<RegisterPage> {
                 onPressed: _register,
                 child: Text('Register'),
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, backgroundColor: Colors.blue, // Text color
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue, // Text color
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Registration Error'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          ),
+        ],
       ),
     );
   }

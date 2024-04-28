@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'picture_page.dart'; // Assuming this is the path to the picture upload page
 
 class UserSetupPage extends StatefulWidget {
@@ -17,14 +19,31 @@ class _UserSetupPageState extends State<UserSetupPage> {
     'Music', 'Movies', 'Books', 'Sports', 'Tech', 'Travel', 'Cooking', 'Gaming'
   ];
 
-  void _submitProfile() {
+  void _submitProfile() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Navigate to UserPicturesPage to upload images
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => UserPicturesPage()),
-      );
+      String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      Map<String, dynamic> userData = {
+        'name': _name,
+        'age': _age,
+        'jobTitle': _jobTitle,
+        'bio': _bio,
+        'interests': _selectedInterests,
+      };
+
+      try {
+        await firestore.collection('users').doc(userId).set(userData);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => UserPicturesPage(userData: userData)),
+        );
+      } catch (e) {
+        print('Error saving profile: $e');
+        // Consider showing an error message to the user
+      }
     }
   }
 
@@ -56,7 +75,6 @@ class _UserSetupPageState extends State<UserSetupPage> {
                 },
                 onSaved: (value) => _name = value!,
               ),
-              SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Age',
@@ -72,7 +90,6 @@ class _UserSetupPageState extends State<UserSetupPage> {
                 },
                 onSaved: (value) => _age = value!,
               ),
-              SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Job Title',
@@ -87,7 +104,6 @@ class _UserSetupPageState extends State<UserSetupPage> {
                 },
                 onSaved: (value) => _jobTitle = value!,
               ),
-              SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Bio',
@@ -103,7 +119,6 @@ class _UserSetupPageState extends State<UserSetupPage> {
                 },
                 onSaved: (value) => _bio = value!,
               ),
-              SizedBox(height: 10),
               Text('Select Interests', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               Wrap(
                 spacing: 10,
@@ -123,12 +138,11 @@ class _UserSetupPageState extends State<UserSetupPage> {
                   },
                 )).toList(),
               ),
-              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submitProfile,
                 child: Text('Next Steps'),
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, backgroundColor: Colors.orange, // Text color
+                  foregroundColor: Colors.white, backgroundColor: Colors.orange,
                 ),
               ),
             ],

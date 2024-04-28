@@ -1,51 +1,13 @@
 {
   "project_info": {
-    "project_number": "555927515915",
-    "project_id": "bookme-f5c4e",
-    "storage_bucket": "bookme-f5c4e.appspot.com"
+    "project_number": "987066823723",
+    "project_id": "prosper-jibunor-new-project",
+    "storage_bucket": "prosper-jibunor-new-project.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:555927515915:android:119190ecddcad1cf2a680e",
-        "android_client_info": {
-          "package_name": "com.ase485.bookme"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAQS1bMzcFJqwbNg41HdhdjQj4P3WU9yus"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:555927515915:android:cf7800a15f5ba5ef2a680e",
-        "android_client_info": {
-          "package_name": "com.example.happe_application"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAQS1bMzcFJqwbNg41HdhdjQj4P3WU9yus"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:555927515915:android:48ea0649a6f5e2c32a680e",
+        "mobilesdk_app_id": "1:987066823723:android:55dac18eda6a202017a66e",
         "android_client_info": {
           "package_name": "com.example.happe_final"
         }
@@ -53,7 +15,26 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAQS1bMzcFJqwbNg41HdhdjQj4P3WU9yus"
+          "current_key": "AIzaSyCKeizLo4k8sS2UJCIjyCqwmeZQ7IoaSVk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:987066823723:android:76232f189224098c17a66e",
+        "android_client_info": {
+          "package_name": "com.example.hwfour"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKeizLo4k8sS2UJCIjyCqwmeZQ7IoaSVk"
         }
       ],
       "services": {
